@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width">
     <title>JS Bin</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.js"></script>
-
+    <script src="https://qtvr-wap11.dev.lprnd.net/webagent/client-SDK.min.js"></script>
 </head>
 <body>
 
@@ -29,8 +29,12 @@
 
 <div id="my-custom-widget">
     <customer-details
-        :details="getDetails"
+        :details="details"
     ></customer-details>
+    <h1>Note</h1>
+    <div>
+        <textarea name="note" id="note" cols="30" rows="10" v-model="note" @input="saveNote($event.target.value)"></textarea>
+    </div>
 </div>
 
 <script src="script.js"></script>

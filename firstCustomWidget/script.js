@@ -1,3 +1,6 @@
+const CUSTOMER_ID_QUERY_PARAM = 'customerId';
+const NOTE_PREFIX_STORAGE = 'LENote';
+
 Vue.component('customerDetailsItem', {
     template: '#customer-details-item-template',
     props: ['item'],
@@ -28,16 +31,54 @@ Vue.component('customerDetails', {
 
 new Vue({
     el: '#my-custom-widget',
-    data: {
-
+    data() {
+        return {
+            details: this.getDetails(),
+            note: this.getNote(),
+            visitorId: ''
+        }
     },
-    computed: {
+    methods: {
         getDetails() {
             const paramsString = location.search;
             const searchParams = new URLSearchParams(paramsString);
             const result =  [...searchParams];
             return result;
+        },
+        getCustomerId() { //from query param
+            const details = this.getDetails();
+            const customerIdData = details.find((row) => {
+                return row.some((item) => {
+                    return item === CUSTOMER_ID_QUERY_PARAM;
+                });
+            });
+            return customerIdData.length === 2 ? customerIdData[1] : '';
+        },
+        getNote() {
+            const customerId = this.getCustomerId();
+            const noteStore = `${NOTE_PREFIX_STORAGE}${customerId}`;
+            const note = localStorage.getItem(noteStore) || '';
+            return note;
+        },
+        saveNote(note) {
+            const customerId = this.getCustomerId();
+            const noteStore = `${NOTE_PREFIX_STORAGE}${customerId}`;
+            localStorage.setItem(noteStore, note);
         }
-    }
+    },
+    created() {
+        lpTag.agentSDK.init({});
+        lpTag.agentSDK.bind('visitorInfo.visitorId',
+            function(data){
+                if(data.newValue || (data.newValue instanceof Array && data.newValue.length)) {
+                    this.visitorId = data.newValue;
+                    console.log(`visitorId: ${this.visitorId}`);
+                }
+            },
+            function(err){
+                console.error(`error getting visitorInfo.visitorId. err: ${err}`);
+            }
+        );
+    },
 });
 
