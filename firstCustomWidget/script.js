@@ -34,7 +34,8 @@ new Vue({
     data() {
         return {
             details: this.getDetails(),
-            note: this.getNote(),
+            //note: this.getNote(),
+            note: '',
             visitorId: ''
         }
     },
@@ -55,13 +56,15 @@ new Vue({
             return customerIdData.length === 2 ? customerIdData[1] : '';
         },
         getNote() {
-            const customerId = this.getCustomerId();
+            //const customerId = this.getCustomerId();
+            const customerId = this.visitorId;
             const noteStore = `${NOTE_PREFIX_STORAGE}${customerId}`;
             const note = localStorage.getItem(noteStore) || '';
             return note;
         },
         saveNote(note) {
-            const customerId = this.getCustomerId();
+            //const customerId = this.getCustomerId();
+            const customerId = this.visitorId;
             const noteStore = `${NOTE_PREFIX_STORAGE}${customerId}`;
             localStorage.setItem(noteStore, note);
         }
@@ -73,6 +76,7 @@ new Vue({
                 if(data.newValue || (data.newValue instanceof Array && data.newValue.length)) {
                     this.visitorId = data.newValue;
                     console.log(`visitorId: ${this.visitorId}`);
+                    this.note = this.getNote();
                 }
             },
             function(err){
