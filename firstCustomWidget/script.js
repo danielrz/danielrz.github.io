@@ -75,9 +75,9 @@ new Vue({
         lpTag.agentSDK.bind('visitorInfo.visitorId',
             function(data){
                 if(data.newValue || (data.newValue instanceof Array && data.newValue.length)) {
-                    this.visitorId = data.newValue;
-                    console.log(`visitorId: ${this.visitorId}`);
-                    this.note = that.getNote(this);
+                    that.visitorId = data.newValue;
+                    console.log(`visitorId: ${that.visitorId}`);
+                    that.note = that.getNote();
                 }
             },
             function(err){
