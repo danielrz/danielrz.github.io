@@ -71,12 +71,13 @@ new Vue({
     },
     created() {
         lpTag.agentSDK.init({});
+        var that = this;
         lpTag.agentSDK.bind('visitorInfo.visitorId',
             function(data){
                 if(data.newValue || (data.newValue instanceof Array && data.newValue.length)) {
                     this.visitorId = data.newValue;
                     console.log(`visitorId: ${this.visitorId}`);
-                    this.note = this.getNote();
+                    this.note = that.getNote(this);
                 }
             },
             function(err){
