@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<meta name="robots" content="noindex">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JS Bin</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.js"></script>
+
+</head>
+<body>
+
+<script type="x/template" id="customer-details-template">
+    <div id="customer-details">
+        <h1>Customer Details:</h1>
+        <ul>
+            <li
+                    is="customer-details-item"
+                    :details="details"
+                    v-for="item in details"
+                    :item="item"
+            ></li>
+        </ul>
+    </div>
+</script>
+
+<script type="x/template" id="customer-details-item-template">
+    <div>{{param}}: <b>{{paramValue}}</b></div>
+</script>
+
+<div id="my-custom-widget">
+    <customer-details
+        :details="getDetails"
+    ></customer-details>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
