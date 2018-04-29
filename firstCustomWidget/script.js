@@ -1,6 +1,6 @@
 Vue.component('customerDetailsItem', {
     template: '#customer-details-item-template',
-    props: ['details', 'item'],
+    props: ['item'],
     data: {},
     methods: {},
     computed: {
@@ -23,9 +23,6 @@ Vue.component('customerDetails', {
     },
     data: {},
     methods: {},
-    mounted() {
-        let x = this.details;
-    },
 });
 
 
