@@ -40,6 +40,16 @@ new Vue({
         }
     },
     methods: {
+        _onVisitorIdFetchSuccess(data) {
+            if(data.newValue || (data.newValue instanceof Array && data.newValue.length)) {
+                this.visitorId = data.newValue;
+                console.log(`visitorId: ${this.visitorId}`);
+                this.note = this.getNote();
+            }
+        },
+        _onVisitorIdFetchError(err) {
+            console.error(`error getting visitorInfo.visitorId. err: ${err}`);
+        },
         getDetails() {
             const paramsString = location.search;
             const searchParams = new URLSearchParams(paramsString);
@@ -57,33 +67,19 @@ new Vue({
         },
         getNote() {
             //const customerId = this.getCustomerId();
-            const customerId = this.visitorId;
-            const noteStore = `${NOTE_PREFIX_STORAGE}${customerId}`;
+            const noteStore = `${NOTE_PREFIX_STORAGE}${this.visitorId}`;
             const note = localStorage.getItem(noteStore) || '';
             return note;
         },
         saveNote(note) {
             //const customerId = this.getCustomerId();
-            const customerId = this.visitorId;
-            const noteStore = `${NOTE_PREFIX_STORAGE}${customerId}`;
+            const noteStore = `${NOTE_PREFIX_STORAGE}${this.visitorId}`;
             localStorage.setItem(noteStore, note);
         }
     },
     created() {
         lpTag.agentSDK.init({});
-        var that = this;
-        lpTag.agentSDK.bind('visitorInfo.visitorId',
-            function(data){
-                if(data.newValue || (data.newValue instanceof Array && data.newValue.length)) {
-                    that.visitorId = data.newValue;
-                    console.log(`visitorId: ${that.visitorId}`);
-                    that.note = that.getNote();
-                }
-            },
-            function(err){
-                console.error(`error getting visitorInfo.visitorId. err: ${err}`);
-            }
-        );
+        lpTag.agentSDK.bind('visitorInfo.visitorId', this._onVisitorIdFetchSuccess, this._onVisitorIdFetchError);
     },
 });
 
