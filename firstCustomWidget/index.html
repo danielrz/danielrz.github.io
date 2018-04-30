@@ -33,8 +33,11 @@
     ></customer-details>
     <h1>Note</h1>
     <div>
-        <textarea name="note" id="note" cols="30" rows="10" v-model="note" @input="saveNote($event.target.value)"></textarea>
+        <textarea name="note" id="note" cols="30" rows="4" v-model="note" @input="saveNote($event.target.value)"></textarea>
     </div>
+    <h1>Counters</h1>
+    <div>Agent messages: <b>{{totalAgentMessages}}</b></div>
+    <div>consumer messages: <b>{{totalConsumersMessages}}</b></div>
 </div>
 
 <script src="script.js"></script>

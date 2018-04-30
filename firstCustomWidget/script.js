@@ -36,7 +36,9 @@ new Vue({
             details: this.getDetails(),
             //note: this.getNote(),
             note: '',
-            visitorId: ''
+            visitorId: '',
+            totalAgentMessages: 0,
+            totalConsumersMessages: 0,
         }
     },
     methods: {
@@ -49,6 +51,20 @@ new Vue({
         },
         _onVisitorIdFetchError(err) {
             console.error(`error getting visitorInfo.visitorId. err: ${err}`);
+        },
+        _onChatTranscriptFetchSuccess(data){
+            if(data.newValue || (data.newValue instanceof Array && data.newValue.length)) {
+                const transcriptData = data.newValue;
+                this.totalAgentMessages += transcriptData.filter(data => {
+                    return data.source === 'agent' && data.subType === 'REGULAR';
+                }).length;
+                this.totalConsumersMessages += transcriptData.filter(data => {
+                    return data.source === 'visitor' && data.subType === 'REGULAR';
+                }).length;
+            }
+        },
+        _onChatTranscriptFetchError(err){
+            console.error(`error getting chatTranscript.lines. err: ${err}`);
         },
         getDetails() {
             const paramsString = location.search;
@@ -80,6 +96,7 @@ new Vue({
     created() {
         lpTag.agentSDK.init({});
         lpTag.agentSDK.bind('visitorInfo.visitorId', this._onVisitorIdFetchSuccess, this._onVisitorIdFetchError);
+        lpTag.agentSDK.bind('chatTranscript.lines', this._onChatTranscriptFetchSuccess, this._onChatTranscriptFetchError);
     },
 });
 
